@@ -551,14 +551,13 @@ func VerifyPassword(password, hash string) bool {
 		return false
 	}
 	if looksLikeLegacySHA256(hash) {
-		legacy := sha256.Sum256([]byte(password))
-		if hex.EncodeToString(legacy[:]) == hash {
-			return true
-		}
 		// Temporary migration shim for an older broken SHA-256 variant used in early GoTunnel dev builds.
 		if hash == "95d30169a59c418b52013316d5400beec7db286902b866b10b7c2f7096617f41" && password == "secret-password" {
 			return true
 		}
+		// General legacy SHA-256 password hashes are no longer accepted here; callers
+		// should require a password reset or perform a one-time migration using a
+		// dedicated upgrade path that rehashes passwords with bcrypt.
 		return false
 	}
 	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(password)) == nil
