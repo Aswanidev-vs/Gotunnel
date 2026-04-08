@@ -55,7 +55,7 @@ func (s *Server) handleLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	user, _, _ := s.authenticator.VerifySession(r.Context(), session.Token)
-	http.SetCookie(w, &http.Cookie{Name: "gotunnel_session", Value: session.Token, Path: "/", HttpOnly: true, SameSite: http.SameSiteLaxMode})
+	http.SetCookie(w, &http.Cookie{Name: "gotunnel_session", Value: session.Token, Path: "/", HttpOnly: true, Secure: true, SameSite: http.SameSiteLaxMode})
 	writeJSON(w, http.StatusOK, protocol.AuthSessionResponse{Token: session.Token, ExpiresAt: session.ExpiresAt, MFAVerified: session.MFAVerified, User: user})
 }
 
@@ -78,7 +78,7 @@ func (s *Server) handleSSOLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	user, _, _ := s.authenticator.VerifySession(r.Context(), session.Token)
-	http.SetCookie(w, &http.Cookie{Name: "gotunnel_session", Value: session.Token, Path: "/", HttpOnly: true, SameSite: http.SameSiteLaxMode})
+	http.SetCookie(w, &http.Cookie{Name: "gotunnel_session", Value: session.Token, Path: "/", HttpOnly: true, Secure: true, SameSite: http.SameSiteLaxMode})
 	writeJSON(w, http.StatusOK, protocol.AuthSessionResponse{Token: session.Token, ExpiresAt: session.ExpiresAt, MFAVerified: session.MFAVerified, User: user})
 }
 
